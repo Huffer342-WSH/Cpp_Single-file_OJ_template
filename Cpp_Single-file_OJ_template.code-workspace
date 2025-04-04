@@ -1,0 +1,99 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"type": "cppbuild",
+				"label": "g++ build",
+				"command": "g++",
+				"args": [
+					"-fdiagnostics-color=always",
+					"-O0",
+					"-g",
+					"${file}",
+					"-o",
+					"${workspaceFolder}/build/a.exe"
+				],
+				"options": {
+					"cwd": "${fileDirname}"
+				},
+				"problemMatcher": [
+					"$gcc"
+				],
+				"group": "build",
+				"detail": "G++编译当前文件"
+			},
+			{
+				"type": "shell",
+				"label": "run",
+				"linux": {
+					"command": "${workspaceFolder}/build/a.exe",
+					"args": [
+						"< ${workspaceFolder}/io/in.txt > ${workspaceFolder}/io/out.txt"
+					]
+				},
+				"windows": {
+					"command": "Get-Content ${workspaceFolder}/io/in.txt | ${workspaceFolder}/build/a.exe | Tee-Object -FilePath ${workspaceFolder}/io/out.txt"
+				},
+				"detail": "运行程序"
+			},
+			{
+				"type": "shell",
+				"label": "g++ build&run",
+				"linux": {
+					"command": "${workspaceFolder}/build/a.exe < ${workspaceFolder}/io/in.txt | tee ${workspaceFolder}/io/out.txt",
+				},
+				"windows": {
+					"command": "Get-Content ${workspaceFolder}/io/in.txt | ${workspaceFolder}/build/a.exe | Tee-Object -FilePath ${workspaceFolder}/io/out.txt"
+				},
+				"dependsOrder": "sequence",
+				"dependsOn": [
+					"g++ build"
+				],
+				"group": {
+					"kind": "build",
+					"isDefault": true
+				},
+				"detail": "G++编译并运行当前文件",
+				"presentation": {
+					"echo": true,
+					"panel": "dedicated",
+					"showReuseMessage": true,
+					"clear": true
+				},
+				"problemMatcher": []
+			}
+		]
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "C++ Launch",
+				"type": "cppdbg",
+				"request": "launch",
+				"program": "${workspaceFolder}/build/a.exe",
+				"args": [],
+				"stopAtEntry": true,
+				"cwd": "${workspaceFolder}",
+				"environment": [],
+				"externalConsole": false,
+				"MIMode": "gdb",
+				"setupCommands": [
+					{
+						"description": "Enable pretty-printing for gdb",
+						"text": "-enable-pretty-printing",
+						"ignoreFailures": true
+					}
+				],
+				"preLaunchTask": "g++ build"
+			}
+		],
+		"compounds": []
+	},
+}
