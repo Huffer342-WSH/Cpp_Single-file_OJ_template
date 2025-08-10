@@ -9,7 +9,7 @@
 		"tasks": [
 			{
 				"type": "cppbuild",
-				"label": "g++ build",
+				"label": "编译",
 				"command": "g++",
 				"args": [
 					"-fdiagnostics-color=always",
@@ -17,7 +17,7 @@
 					"-g",
 					"${file}",
 					"-o",
-					"${workspaceFolder}/build/a.exe"
+					"${workspaceFolder}/io/${fileBasenameNoExtension}/${fileBasenameNoExtension}.exe"
 				],
 				"options": {
 					"cwd": "${fileDirname}"
@@ -30,30 +30,29 @@
 			},
 			{
 				"type": "shell",
-				"label": "run",
+				"label": "运行",
 				"linux": {
 					"command": "${workspaceFolder}/build/a.exe",
 					"args": [
-						"< ${workspaceFolder}/io/in.txt > ${workspaceFolder}/io/out.txt"
+						"< ${workspaceFolder}/io/in.txt |tee ${workspaceFolder}/io/out.txt"
 					]
 				},
 				"windows": {
-					"command": "Get-Content ${workspaceFolder}/io/in.txt | ${workspaceFolder}/build/a.exe | Tee-Object -FilePath ${workspaceFolder}/io/out.txt"
+					"command": "pwsh",
+					"args": [
+						"${workspaceFolder}/run.ps1",
+						"${workspaceFolder}/io/${fileBasenameNoExtension}/${fileBasenameNoExtension}.exe"
+					]
 				},
 				"detail": "运行程序"
 			},
 			{
 				"type": "shell",
-				"label": "g++ build&run",
-				"linux": {
-					"command": "${workspaceFolder}/build/a.exe < ${workspaceFolder}/io/in.txt | tee ${workspaceFolder}/io/out.txt",
-				},
-				"windows": {
-					"command": "Get-Content ${workspaceFolder}/io/in.txt | ${workspaceFolder}/build/a.exe | Tee-Object -FilePath ${workspaceFolder}/io/out.txt"
-				},
+				"label": "编译并运行",
 				"dependsOrder": "sequence",
 				"dependsOn": [
-					"g++ build"
+					"编译",
+					"运行"
 				],
 				"group": {
 					"kind": "build",
@@ -95,5 +94,11 @@
 			}
 		],
 		"compounds": []
+	},
+	"settings": {
+		"files.associations": {
+			"iostream": "cpp"
+		},
+		"editor.formatOnSave": true
 	},
 }
